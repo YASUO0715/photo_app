@@ -11,6 +11,12 @@ use Exception;
 
 class ArticleController extends Controller
 {
+    public function __construct()
+    {
+        // アクションに合わせたpolicyのメソッドで認可されていないユーザーはエラーを投げる
+        $this->authorizeResource(Article::class, 'article');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -45,7 +51,7 @@ class ArticleController extends Controller
         $article->fill($request->all());
 
         // ユーザーIDを追加
-        $article->user_id = 1;
+        $article->user_id = $request->user()->id;   
 
         // ファイルの用意
         $file = $request->file('file');
@@ -106,6 +112,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
+
         return view('articles.edit', compact('article'));
     }
 
@@ -118,6 +125,7 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
+
 
         // バリデーション
         $request->validate([
@@ -163,6 +171,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         // DB::beginTransaction();
+
 
         //Article,Attach,FILE削除
         $path = $article->image_path;
