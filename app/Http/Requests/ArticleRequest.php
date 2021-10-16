@@ -13,7 +13,7 @@ class ArticleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,15 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'caption' => 'required|string|max:255',
+            'info' => 'max:255',
         ];
+        //追加したいかもしれない内容のチェック。上は仮置 getnameはルーティングの名前をとってくるということ。sail artisan route:listで出てくるやつと一致したら実行する。
+        $route = $this->route()->getname();
+        if($route === 'articles.store'){
+            $rule['file'] = 'required|file|image';
+        }
+
+        return $rule;
     }
 }

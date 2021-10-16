@@ -10,6 +10,12 @@ class Article extends Model
 {
     use HasFactory;
 
+        protected $fillable = [
+        // 'file',
+        'info',
+        'caption',
+    ];
+
     public function attachment()
     {
         return $this->hasOne(Attachment::class);
