@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\Attachment;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class AttachmentFactory extends Factory
 {
@@ -21,8 +23,19 @@ class AttachmentFactory extends Factory
      */
     public function definition()
     {
+        // 画像サイズを指定
+        $width = 500;
+        $height = random_int(250, 600);
+        // 画像を保存してpathを取得
+        $file = $this->faker->image(null, $width, $height);
+        $path = Storage::putFile('articles', $file);
+
+        File::delete($file);
+
         return [
-            //
+            'article_id' => \App\Models\Article::Factory()->create(),
+            'org_name' => basename($file),
+            'name' => basename($path),
         ];
     }
 }
