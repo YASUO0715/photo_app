@@ -112,7 +112,7 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-
+        // $this->authorize('update',$article);
         return view('articles.edit', compact('article'));
     }
 
@@ -125,8 +125,7 @@ class ArticleController extends Controller
      */
     public function update(ArticleRequest $request, Article $article)
     {
-
-
+        // $this->authorize('update', $article);
         // バリデーション
         $request->validate([
             'caption' => 'required|max:255',
@@ -174,6 +173,7 @@ class ArticleController extends Controller
 
 
         //Article,Attach,FILE削除
+        // $this->authorize('delete', $article);
         $path = $article->image_path;
         DB::beginTransaction();
         try {

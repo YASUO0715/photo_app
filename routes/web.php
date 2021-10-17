@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\Auth\OAuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,3 +34,14 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__ . '/auth.php';
+
+// authから始まるルーティングに認証前にアクセスがあった場合
+Route::prefix('auth')->middleware('guest')->group(function () {
+        // auth/githubにアクセスがあった場合はOAuthControllerのredirectToProviderアクションへルーティング
+        Route::get('github', [OAuthController::class, 'redirectToProvider'])
+            ->name('redirectToProvider');
+
+        // auth/github/callbackにアクセスがあった場合はOAuthControllerのoauthCallbackアクションへルーティング
+        Route::get('github/callback', [OAuthController::class, 'oauthCallback'])
+                ->name('oauthCallback');
+    });
